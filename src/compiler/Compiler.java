@@ -170,46 +170,110 @@ class Binary extends Node {
     enum Kind {
 
         /**
-         * Logical or kind of binary node.
+         * Logical or kind of binary node.  Commutative.
          */
-        OR("||"),
+        OR("||") {
+
+            @Override
+            Kind symmetricWith() {
+                return OR;
+            }    
+        },
         /**
-         * Logical and kind of binary node.
+         * Logical and kind of binary node.  Commutative.
          */
-        AND("&&"),
+        AND("&&") {
+
+            @Override
+            Kind symmetricWith() {
+                return AND;
+            }    
+        },
         /**
-         * Addition kind of binary node.
+         * Addition kind of binary node. Commutative.
          */
-        ADD("+"),
+        ADD("+") {
+
+            @Override
+            Kind symmetricWith() {
+                return ADD;
+            }    
+        },
         /**
          * Subtraction kind of binary node.
          */
-        SUBTRACT("-"),
+        SUBTRACT("-") {
+
+            @Override
+            Kind symmetricWith() {
+                return null;
+            }    
+        },
         /**
-         * Multiplication kind of binary node.
+         * Multiplication kind of binary node. Commutative.
          */
-        MULTIPLY("*"),
+        MULTIPLY("*") {
+
+            @Override
+            Kind symmetricWith() {
+                return MULTIPLY;
+            }    
+        },
         /**
          * Division kind of binary node.
          */
-        DIVIDE("/"),
+        DIVIDE("/") {
+
+            @Override
+            Kind symmetricWith() {
+                return null;
+            }    
+        },
         /**
-         * Greater than comparison kind of binary node.
+         * Greater than comparison kind of binary node. Symmetric with LESS.
          */
-        GREATER(">"),
+        GREATER(">") {
+
+            @Override
+            Kind symmetricWith() {
+                return LESS;
+            }    
+        },
         /**
-         * Less than comparison kind of binary node.
+         * Less than comparison kind of binary node. Symmetric with GREATER.
          */
-        LESS("<"),
+        LESS("<") {
+
+            @Override
+            Kind symmetricWith() {
+                return GREATER;
+            }    
+        },
         /**
-         * Equality comparison kind of binary node.
+         * Equality comparison kind of binary node. Commutative.
          */
-        EQUALS("==");
+        EQUALS("==") {
+
+            @Override
+            Kind symmetricWith() {
+                return EQUALS;
+            }    
+        };
 
         /**
          * Target code to cause this operation.
          */
         String code;
+        
+        /**
+         * Operation that the one represented by this kind is symmetric with.
+         * 
+         * If self, then the operator is commutative. If null then not 
+         * symmetric with any other operator.
+         * 
+         * @return kind that this one is symmetric with
+         */
+        abstract Kind symmetricWith();
 
         /**
          * Construct a new binary node kind.
@@ -259,24 +323,18 @@ class Binary extends Node {
     public boolean equals(Object obj) {
         if (obj instanceof Binary) {
             Binary other = (Binary) obj;
-            if (kind != other.kind) {
-                return false;
-            }
-            if (lhs == other.lhs && rhs == other.rhs) {
-                return true;
-            }
-            // Now allow for commutativity.
-            if (kind != Kind.ADD && kind != Kind.MULTIPLY) {
-                return false;
-            }
-            return lhs == other.rhs && rhs == other.lhs;
+            // Deal with both plain equality and symmetry/commutativity.
+            return ((kind == other.kind && 
+                        lhs == other.lhs && rhs == other.rhs) ||
+                    (kind.symmetricWith() == other.kind &&
+                        lhs == other.rhs && rhs == other.lhs));
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return kind.hashCode() ^ lhs.hashCode() ^ rhs.hashCode();
+        return lhs.hashCode() ^ rhs.hashCode();
     }
 
     @Override
