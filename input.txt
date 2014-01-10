@@ -1,0 +1,44 @@
+(-(Bar * 5 + Baz * 2) > 7) 
+  || (Bar * 5 + 2 * Baz < 3)  
+  || (Bar * 5 + 3 == Xyz)
+
+        Binary OR (27,1)
+          lhs:
+            Binary OR (19,1)
+              lhs:
+                Binary GREATER (9,1)
+                  lhs:
+                    Binary ADD (7,2)
+                      lhs:
+                        Binary MULTIPLY (3,2)
+                          lhs:
+                            Id 'Bar' (1,1)
+                          rhs:
+                            Number 5 (2,1)
+                      rhs:
+                        Binary MULTIPLY (6,1)
+                          lhs:
+                            Id 'Baz' (4,1)
+                          rhs:
+                            Number 2 (5,1)
+                  rhs:
+                    Number 7 (8,1)
+              rhs:
+                Binary LESS (18,1)
+                  lhs:
+                    ref to Binary ADD (7,2)
+                  rhs:
+                    Number 3 (17,2)
+          rhs:
+            Binary EQUALS (26,1)
+              lhs:
+                Binary ADD (24,1)
+                  lhs:
+                    ref to Binary MULTIPLY (3,2)
+                  rhs:
+                    ref to Number 3 (17,2)
+              rhs:
+                Id 'Xyz' (25,1)
+        t3 = (Bar) * (5);
+        t7 = (t3) + ((Baz) * (2));
+        return (((t7) > (7)) || ((t7) < (3))) || (((t3) + (3)) == (Xyz));
