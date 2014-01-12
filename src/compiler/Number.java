@@ -29,7 +29,7 @@ class Number extends Node {
      */
     Number(String string) {
         this.string = string;
-        this.val = Double.valueOf(val);
+        this.val = Double.valueOf(string);
     }
 
     @Override
