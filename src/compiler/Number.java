@@ -59,7 +59,7 @@ class Number extends Node {
 
     @Override
     public int hashCode() {
-        return string.hashCode();
+        return Double.valueOf(val).hashCode();
     }
 
     @Override
