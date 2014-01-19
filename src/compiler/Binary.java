@@ -197,7 +197,7 @@ class Binary extends Node {
 
     @Override
     public int hashCode() {
-        return lhs.hashCode() ^ rhs.hashCode();
+        return lhs.id ^ rhs.id ^ kind.hashCode() ^ kind.symmetricWith().hashCode();
     }
 
     @Override

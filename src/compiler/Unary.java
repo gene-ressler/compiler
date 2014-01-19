@@ -89,7 +89,7 @@ class Unary extends Node {
 
     @Override
     public int hashCode() {
-        return kind.hashCode() ^ operand.hashCode();
+        return kind.hashCode() ^ operand.id;
     }
 
     @Override
